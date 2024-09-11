@@ -283,7 +283,7 @@ public class IndividualProjectApplication implements CommandLineRunner {
     myFileDatabase.setMapping(mapping);
   }
 
-
+  
   public boolean getSaveData() {
     return saveData;
   }
@@ -292,6 +292,7 @@ public class IndividualProjectApplication implements CommandLineRunner {
   public void setSaveData(boolean saveData) {
     IndividualProjectApplication.saveData = saveData;
   }
+
 
   /**
    * This contains all the overheading teardown logic, it will
