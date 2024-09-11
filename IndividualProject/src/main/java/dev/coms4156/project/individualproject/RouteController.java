@@ -327,7 +327,7 @@ public class RouteController {
     }
   }
 
-  /**
+  /**git
    * Attempts to remove a student from the specified department.
    *
    * @param deptCode       A {@code String} representing the department.
