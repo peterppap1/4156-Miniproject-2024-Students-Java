@@ -1,0 +1,13 @@
+https://courseworks2.columbia.edu/courses/203184/assignments/1283340	learn the assignment requirements and how to set up initially, how to conclude README.md;
+
+https://pmd.github.io/	learn the pmd command line to test static bug;
+
+https://google.github.io/styleguide/javaguide.html	learn the correct and standard google java code style;
+
+https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html	learn how to write standard javadoc;
+
+https://www.baeldung.com/mockito-annotations	learn how to mock object which is used in unit tests;
+
+https://www.freecodecamp.org/news/java-unit-testing/	learn how to write java unit tests;
+
+https://stackoverflow.com/questions/12180765/maven-check-style-as-a-part-of-the-build	learn how to use mvn to check code style;

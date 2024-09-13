@@ -72,3 +72,5 @@ Finally, run the following command to generate a branch coverage report:
 be generated and open it to see the tests branch coverage report. 
 
 At this point, it reaches 100% branch coverage.
+
+citation.txt contains the links and descriptions of all the resources I used during this assignment.
