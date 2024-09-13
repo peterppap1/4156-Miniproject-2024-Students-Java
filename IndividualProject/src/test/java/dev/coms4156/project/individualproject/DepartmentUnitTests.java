@@ -1,8 +1,12 @@
 package dev.coms4156.project.individualproject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,117 +14,239 @@ import org.springframework.test.context.ContextConfiguration;
 
 
 /**
- * Writes test case to check methods in the Department.
+ * Writes test cases to check methods in the Department.
  */
 @SpringBootTest
 @ContextConfiguration
 public class DepartmentUnitTests {
 
+  /**
+   * Sets up a course object coms1004, a testCourses map,
+   * and a test department map before each test.
+   */
   @BeforeEach
   public void setupDepartmentForTesting() {
-    String[] times = {"11:40-12:55", "4:10-5:25", "10:10-11:25", "2:40-3:55"};
-    String[] locations = {"417 IAB", "309 HAV", "301 URIS"};
-
-    Course coms1004 = new Course("Adam Cannon", locations[0], times[0], 400);
+    coms1004 = new Course("Adam Cannon", "417 IAB",
+        "11:40-12:55", 400);
     coms1004.setEnrolledStudentCount(249);
-
-    HashMap<String, Course> courses = new HashMap<>();
-    courses.put("1004", coms1004);
-
-    testDepartment = new Department("COMS", courses, "Luca Carloni", 2700);
+    testCourses = new HashMap<>();
+    testCourses.put("1004", coms1004);
+    testDepartment = new Department("COMS", testCourses,
+        "Luca Carloni", 2700);
   }
 
-
+  /**
+   * Tests Department() constructor when course is not null.
+   */
   @Test
-  public void toStringTest() {
-    String expectedResult = "\nCOMS 1004: Instructor: Adam Cannon; Location: 417 IAB; Time: 11:40-12:55";
-    assertEquals(expectedResult, testDepartment.toString());
+  public void constructorTestCourseNotNull() {
+    Course actualCourse = testDepartment.getCourseSelection().get("1004");
+
+    assertTrue(testDepartment.getCourseSelection().containsKey("1004"));
+    assertEquals(testCourses.size(), testDepartment.getCourseSelection().size());
+    assertNotNull(actualCourse);
+    assertEquals(coms1004.getCourseLocation(), actualCourse.getCourseLocation());
+    assertEquals(coms1004.getInstructorName(), actualCourse.getInstructorName());
+    assertEquals(coms1004.getCourseTimeSlot(), actualCourse.getCourseTimeSlot());
+    assertEquals(coms1004.getEnrolledStudentCount(), actualCourse.getEnrolledStudentCount());
+
+    String expectedDeptCode = "COMS";
+    String expectedDepartmentChair = "Luca Carloni";
+    int expectedNumberOfMajors = 2700;
+
+    assertEquals(expectedDeptCode, testDepartment.getDeptCode());
+    assertEquals(expectedDepartmentChair, testDepartment.getDepartmentChair());
+    assertEquals(expectedNumberOfMajors, testDepartment.getNumberOfMajors());
   }
 
+  /**
+   * Tests Department() constructor when course is null.
+   */
+  @Test
+  public void constructorTestCourseNull() {
+    testCourses = null;
+    testDepartment = new Department("COMS", testCourses,
+        "Luca Carloni", 2700);
 
+    Map<String, Course> expectedCourses = new HashMap<>();
+    assertEquals(expectedCourses, testDepartment.getCourseSelection());
+
+    String expectedDeptCode = "COMS";
+    assertEquals(expectedDeptCode, testDepartment.getDeptCode());
+
+    String expectedDepartmentChair = "Luca Carloni";
+    assertEquals(expectedDepartmentChair, testDepartment.getDepartmentChair());
+
+    int expectedNumberOfMajors = 2700;
+    assertEquals(expectedNumberOfMajors, testDepartment.getNumberOfMajors());
+  }
+
+  /**
+   * Tests getDeptCode() method.
+   */
+  @Test
+  public void getDeptCodeTest() {
+    String expectedDeptCode = "COMS";
+    assertEquals(expectedDeptCode, testDepartment.getDeptCode());
+  }
+
+  /**
+   * Tests getNumberOfMajors() method.
+   */
   @Test
   public void getNumberOfMajorsTest() {
     int expectedResult = 2700;
     assertEquals(expectedResult, testDepartment.getNumberOfMajors());
   }
 
-
+  /**
+   * Tests getDepartmentChair() method.
+   */
   @Test
   public void getDepartmentChairTest() {
-    String expectedResult = "Adam Cannon";
+    String expectedResult = "Luca Carloni";
     assertEquals(expectedResult, testDepartment.getDepartmentChair());
   }
 
-
+  /**
+   * Tests getCourseSelection() method.
+   */
   @Test
   public void getCourseSelectionTest() {
-    String[] times = {"11:40-12:55", "4:10-5:25", "10:10-11:25", "2:40-3:55"};
-    String[] locations = {"417 IAB", "309 HAV", "301 URIS"};
+    Course actualCourse = testDepartment.getCourseSelection().get("1004");
 
-    Course coms1004 = new Course("Adam Cannon", locations[0], times[0], 400);
-    coms1004.setEnrolledStudentCount(249);
-
-    HashMap<String, Course> expectedResult = new HashMap<>();
-    expectedResult.put("1004", coms1004);
-
-    assertEquals(expectedResult, testDepartment.getCourseSelection());
+    assertTrue(testDepartment.getCourseSelection().containsKey("1004"));
+    assertEquals(testCourses.size(), testDepartment.getCourseSelection().size());
+    assertNotNull(actualCourse);
+    assertEquals(coms1004.getCourseLocation(), actualCourse.getCourseLocation());
+    assertEquals(coms1004.getInstructorName(), actualCourse.getInstructorName());
+    assertEquals(coms1004.getCourseTimeSlot(), actualCourse.getCourseTimeSlot());
+    assertEquals(coms1004.getEnrolledStudentCount(), actualCourse.getEnrolledStudentCount());
   }
 
-
+  /**
+   * Tests addPersonToMajor() method when number of majors is not negative.
+   */
   @Test
-  public void addPersonToMajorTest() {
+  public void addPersonToMajorTestWhenNotNegative() {
     testDepartment.addPersonToMajor();
     int expectedResult = 2701;
     assertEquals(expectedResult, testDepartment.getNumberOfMajors());
   }
 
-
+  /**
+   * Tests addPersonToMajor() method when number of majors is negative.
+   */
   @Test
-  public void dropPersonFromMajorTest() {
+  public void addPersonToMajorTestWhenNegative() {
+    testDepartment = new Department("COMS", testCourses,
+        "Luca Carloni", -1);
+    assertThrows(IllegalStateException.class, () -> testDepartment.addPersonToMajor());
+  }
+
+  /**
+   * Tests dropPersonFromMajor() method when number of majors is positive.
+   */
+  @Test
+  public void dropPersonFromMajorTestWhenPositive() {
     testDepartment.dropPersonFromMajor();
     int expectedResult = 2699;
     assertEquals(expectedResult, testDepartment.getNumberOfMajors());
   }
 
+  /**
+   * Tests dropPersonFromMajor() method when number of majors is not positive.
+   */
+  @Test
+  public void dropPersonFromMajorTestWhenNotPositive() {
+    testDepartment = new Department("COMS", testCourses,
+        "Luca Carloni", 0);
+    assertThrows(IllegalStateException.class, () -> testDepartment.dropPersonFromMajor());
+  }
 
+  /**
+   * Tests addCourse() method.
+   */
   @Test
   public void addCourseTest() {
-    String[] times = {"11:40-12:55", "4:10-5:25", "10:10-11:25", "2:40-3:55"};
-    String[] locations = {"417 IAB", "309 HAV", "301 URIS"};
-
-    Course coms1004 = new Course("Adam Cannon", locations[0], times[0], 400);
-    coms1004.setEnrolledStudentCount(249);
-    Course coms3134 = new Course("Brian Borowski", locations[2], times[1], 250);
+    Course coms3134 = new Course("Brian Borowski", "301 URIS",
+        "4:10-5:25", 250);
     coms3134.setEnrolledStudentCount(242);
 
-    HashMap<String, Course> expectedResult = new HashMap<>();
-    expectedResult.put("1004", coms1004);
-    expectedResult.put("3134", coms3134);
+    testCourses.put("3134", coms3134);
 
     testDepartment.addCourse("3134", coms3134);
-    assertEquals(expectedResult, testDepartment.getCourseSelection());
+
+    assertTrue(testDepartment.getCourseSelection().containsKey("1004"));
+    assertTrue(testDepartment.getCourseSelection().containsKey("3134"));
+    assertEquals(testCourses.size(), testDepartment.getCourseSelection().size());
+
+    Course actualCourse1004 = testDepartment.getCourseSelection().get("1004");
+    Course actualCourse3134 = testDepartment.getCourseSelection().get("3134");
+
+    assertNotNull(actualCourse1004);
+    assertNotNull(actualCourse3134);
+    assertEquals(coms1004.getCourseLocation(), actualCourse1004.getCourseLocation());
+    assertEquals(coms1004.getInstructorName(), actualCourse1004.getInstructorName());
+    assertEquals(coms1004.getCourseTimeSlot(), actualCourse1004.getCourseTimeSlot());
+    assertEquals(coms1004.getEnrolledStudentCount(), actualCourse1004.getEnrolledStudentCount());
+
+    assertEquals(coms3134.getCourseLocation(), actualCourse3134.getCourseLocation());
+    assertEquals(coms3134.getInstructorName(), actualCourse3134.getInstructorName());
+    assertEquals(coms3134.getCourseTimeSlot(), actualCourse3134.getCourseTimeSlot());
+    assertEquals(coms3134.getEnrolledStudentCount(), actualCourse3134.getEnrolledStudentCount());
   }
 
-
+  /**
+   * Tests createCourse() method.
+   */
   @Test
   public void createCourseTest() {
-    String[] times = {"11:40-12:55", "4:10-5:25", "10:10-11:25", "2:40-3:55"};
-    String[] locations = {"417 IAB", "309 HAV", "301 URIS"};
+    Course coms3134 = new Course("Brian Borowski", "301 URIS",
+        "4:10-5:25", 250);
+    //coms3134.setEnrolledStudentCount(242);
 
-    Course coms1004 = new Course("Adam Cannon", locations[0], times[0], 400);
-    coms1004.setEnrolledStudentCount(249);
-    Course coms3203 = new Course("Ansaf Salleb-Aouissi", locations[2], times[2], 250);
-    coms3203.setEnrolledStudentCount(215);
+    testCourses.put("3134", coms3134);
 
-    HashMap<String, Course> expectedResult = new HashMap<>();
-    expectedResult.put("1004", coms1004);
-    expectedResult.put("3203", coms3203);
+    testDepartment.createCourse("3134", "Brian Borowski",
+        "301 URIS", "4:10-5:25", 250);
 
-    testDepartment.createCourse("3203", "Ansaf Salleb-Aouissi", locations[2], times[2], 250);
-    assertEquals(expectedResult, testDepartment.getCourseSelection());
+    assertTrue(testDepartment.getCourseSelection().containsKey("1004"));
+    assertTrue(testDepartment.getCourseSelection().containsKey("3134"));
+    assertEquals(testCourses.size(), testDepartment.getCourseSelection().size());
+
+    Course actualCourse1004 = testDepartment.getCourseSelection().get("1004");
+    Course actualCourse3134 = testDepartment.getCourseSelection().get("3134");
+
+    assertNotNull(actualCourse1004);
+    assertNotNull(actualCourse3134);
+    assertEquals(coms1004.getCourseLocation(), actualCourse1004.getCourseLocation());
+    assertEquals(coms1004.getInstructorName(), actualCourse1004.getInstructorName());
+    assertEquals(coms1004.getCourseTimeSlot(), actualCourse1004.getCourseTimeSlot());
+    assertEquals(coms1004.getEnrolledStudentCount(), actualCourse1004.getEnrolledStudentCount());
+
+    assertEquals(coms3134.getCourseLocation(), actualCourse3134.getCourseLocation());
+    assertEquals(coms3134.getInstructorName(), actualCourse3134.getInstructorName());
+    assertEquals(coms3134.getCourseTimeSlot(), actualCourse3134.getCourseTimeSlot());
+    assertEquals(0, actualCourse3134.getEnrolledStudentCount());
   }
 
+  /**
+   * Tests toString() method.
+   */
+  @Test
+  public void toStringTest() {
+    String expectedResult = "COMS 1004: \nInstructor: Adam Cannon; "
+        + "Location: 417 IAB; Time: 11:40-12:55\n";
+    assertEquals(expectedResult, testDepartment.toString());
+  }
 
-  /** The test department instance used for testing. */
-  public Department testDepartment;
+  /** The Department instance used for testing. */
+  private Department testDepartment;
+
+  /** The Course instance used for testing. */
+  private Course coms1004;
+
+  /** The Map instance used for testing. */
+  private Map<String, Course> testCourses;
 }

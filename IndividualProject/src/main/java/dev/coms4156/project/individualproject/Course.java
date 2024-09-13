@@ -24,7 +24,7 @@ public class Course implements Serializable {
     this.instructorName = instructorName;
     this.courseTimeSlot = timeSlot;
     this.enrollmentCapacity = capacity;
-    this.enrolledStudentCount = 500;
+    this.enrolledStudentCount = 0;
   }
 
   /**
@@ -33,7 +33,10 @@ public class Course implements Serializable {
    * @return true if the student is successfully enrolled. false otherwise.
    */
   public boolean enrollStudent() {
-    enrolledStudentCount++;
+    if (!isCourseFull()) {
+      enrolledStudentCount++;
+      return true;
+    }
     return false;
   }
 
@@ -43,35 +46,56 @@ public class Course implements Serializable {
    * @return true if the student is successfully dropped, false otherwise.
    */
   public boolean dropStudent() {
-    enrolledStudentCount--;
+    if (enrolledStudentCount > 0) {
+      enrolledStudentCount--;
+      return true;
+    }
     return false;
   }
 
   /**
-   * Gets a course's location.
+   * Gets the location of the course.
    *
-   * @return The course's location.
+   * @return The location of the course.
    */
   public String getCourseLocation() {
-    return this.instructorName;
-  }
-
-  /**
-   * Gets the instructor's name of the specified course.
-   *
-   * @return The instructor's name of the specified course.
-   */
-  public String getInstructorName() {
     return this.courseLocation;
   }
 
   /**
-   * Gets the time slot of the specified course.
+   * Gets the instructor's name of the course.
    *
-   * @return The time slot of the specified course.
+   * @return The instructor's name of the course.
+   */
+  public String getInstructorName() {
+    return this.instructorName;
+  }
+
+  /**
+   * Gets the time slot of the course.
+   *
+   * @return The time slot of the course.
    */
   public String getCourseTimeSlot() {
     return this.courseTimeSlot;
+  }
+
+  /**
+   * Gets the enrollment capacity of the course.
+   *
+   * @return The enrollment capacity of the course.
+   */
+  public int getEnrollmentCapacity() {
+    return this.enrollmentCapacity;
+  }
+
+  /**
+   * Gets the enrolled student count of the course.
+   *
+   * @return The enrolled student count of the course.
+   */
+  public int getEnrolledStudentCount() {
+    return this.enrolledStudentCount;
   }
 
   /**
@@ -80,10 +104,11 @@ public class Course implements Serializable {
    *
    * @return A string representation of the course.
    */
+  @Override
   public String toString() {
     return "\nInstructor: " + instructorName
-           + "; Location: " + courseLocation
-           + "; Time: " + courseTimeSlot;
+        + "; Location: " + courseLocation
+        + "; Time: " + courseTimeSlot;
   }
 
   /**
@@ -114,21 +139,25 @@ public class Course implements Serializable {
   }
 
   /**
-   * Sets the number of enrolled student in the course to a specified number.
+   * Sets the number of enrolled student in the course to a specified number,
+   * if the input count is non-negative and smaller or equal to the enrollmentCapacity.
    *
    * @param count The count of enrolled students number.
    */
   public void setEnrolledStudentCount(int count) {
+    if (count < 0 || count > this.enrollmentCapacity) {
+      return;
+    }
     this.enrolledStudentCount = count;
   }
 
   /**
    * Checks if the course is full.
    *
-   * @return  True if the count of enrolled students is equal or greater than the capacity.
+   * @return  true if enrollmentCapacity is smaller than enrolled student count, false otherwise.
    */
   public boolean isCourseFull() {
-    return enrollmentCapacity > enrolledStudentCount;
+    return enrolledStudentCount >= enrollmentCapacity;
   }
 
   @Serial
